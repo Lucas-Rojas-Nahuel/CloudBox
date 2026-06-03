@@ -1,0 +1,4 @@
+@import "tailwindcss";
+
+/* Dile a Tailwind v4 dónde buscar tus clases */
+@source "../views/**/*.ejs";
