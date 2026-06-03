@@ -2,3 +2,4 @@ node_modules
 tailwindcss.exe
 /src/generated/prisma
 .env
+viendo.jsx
