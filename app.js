@@ -1,5 +1,7 @@
+import "dotenv/config"; // 👈 ¡ESTO PRIMERO! Carga el archivo .env en memoria
 import express from "express";
 import path from "path";
+import prisma from "./db.js";
 
 const app = express();
 
@@ -9,7 +11,7 @@ app.set("view engine", "ejs");
 app.use(express.static(path.join(import.meta.dirname, "public")));
 
 app.get("/", (req, res) => {
-  res.render("index",{title:"CloudBox"});
+  res.render("index", { title: "CloudBox" });
 });
 
 app.listen(3000, (err) => {

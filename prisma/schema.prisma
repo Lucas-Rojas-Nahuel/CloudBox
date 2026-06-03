@@ -1,0 +1,54 @@
+ datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  folders   Folder[]
+  files     File[]
+}
+
+model Folder {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  
+  // Relación con el Usuario
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Lógica de Subcarpetas (Relación consigo misma)
+  parentId  String?
+  parent    Folder?  @relation("SubFolders", fields: [parentId], references: [id], onDelete: Cascade)
+  children  Folder[] @relation("SubFolders")
+
+  // Relación con los archivos que contiene
+  files     File[]
+}
+
+model File {
+  id        String   @id @default(uuid())
+  name      String   // Nombre original del archivo (ej: "foto.jpg")
+  url       String   // La URL que nos dará Supabase Storage
+  size      Int      // Tamaño en bytes
+  createdAt DateTime @default(now())
+
+  // Relación con el Usuario
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relación con la Carpeta (opcional, si es null está en la raíz)
+  folderId  String?
+  folder    Folder?  @relation(fields: [folderId], references: [id], onDelete: Cascade)
+}
